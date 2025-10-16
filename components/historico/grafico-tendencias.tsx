@@ -1,7 +1,6 @@
 'use client'
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react'
 import { ResumoDia } from '@/app/actions/historico'
 import { format, parseISO } from 'date-fns'
@@ -67,7 +66,7 @@ export function GraficoTendencias({ historico }: GraficoTendenciasProps) {
         <div className="space-y-4">
           {/* Gráfico de barras simples */}
           <div className="flex items-end justify-between h-48 gap-2">
-            {ultimosDias.map((dia, index) => {
+            {ultimosDias.map((dia) => {
               const altura = range > 0 ? 
                 ((dia.total_lucro - minLucro) / range) * 100 : 50
               

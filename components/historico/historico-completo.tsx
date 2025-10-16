@@ -32,7 +32,6 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { 
-  Calendar,
   Filter,
   Edit,
   Trash2,

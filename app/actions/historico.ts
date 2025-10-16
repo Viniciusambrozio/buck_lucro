@@ -2,6 +2,7 @@
 
 import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
+import { Adquirente } from '@/types'
 
 export interface HistoricoItem {
   id: string
@@ -23,7 +24,7 @@ export interface ResumoDia {
   primeiro_horario: string
   ultimo_horario: string
   calculos: HistoricoItem[]
-  adquirentes?: any[] // Adquirentes que tiveram atividade neste dia
+  adquirentes?: Adquirente[] // Adquirentes que tiveram atividade neste dia
 }
 
 /**
