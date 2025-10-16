@@ -4,17 +4,20 @@ import { DetalhesAdquirente } from '@/components/adquirentes/detalhes-adquirente
 import { notFound, redirect } from 'next/navigation'
 
 interface DetalhesAdquirentePageProps {
-  params: {
+  params: Promise<{
     id: string
-  }
+  }>
 }
 
 /**
  * Página de detalhes de uma adquirente específica
  */
 export default async function DetalhesAdquirentePage({ params }: DetalhesAdquirentePageProps) {
+  // Await params (Next.js 15+)
+  const { id } = await params
+  
   // Buscar dados da adquirente
-  const adquirenteResult = await buscarAdquirentePorId(params.id)
+  const adquirenteResult = await buscarAdquirentePorId(id)
   
   // Verificar se a adquirente existe
   if (adquirenteResult.error === 'Adquirente não encontrada' || !adquirenteResult.adquirente) {
@@ -27,7 +30,7 @@ export default async function DetalhesAdquirentePage({ params }: DetalhesAdquire
   }
 
   // Buscar cálculos relacionados à adquirente
-  const calculosResult = await buscarCalculosPorAdquirente(params.id)
+  const calculosResult = await buscarCalculosPorAdquirente(id)
   
   if (calculosResult.error === 'Usuário não autenticado') {
     redirect('/login')
