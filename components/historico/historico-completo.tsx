@@ -311,7 +311,7 @@ export function HistoricoCompleto({ historico: historicoInicial }: HistoricoComp
                   <TableHeader>
                     <TableRow>
                       <TableHead>Horário</TableHead>
-                      {(dia.adquirentes || adquirentes).map(adquirente => (
+                      {(dia.adquirentes || []).map(adquirente => (
                         <TableHead key={adquirente.id} className="text-right">
                           <div className={`flex items-center justify-end gap-1 ${!adquirente.ativo ? 'opacity-60' : ''}`}>
                             {!adquirente.ativo && (
@@ -339,7 +339,7 @@ export function HistoricoCompleto({ historico: historicoInicial }: HistoricoComp
                     {dia.calculos.map((calculo) => (
                       <TableRow key={calculo.id}>
                         <TableCell>{calculo.horario}</TableCell>
-                        {(dia.adquirentes || adquirentes).map(adquirente => {
+                        {(dia.adquirentes || []).map(adquirente => {
                           let valorAdquirente = 0;
                           const nomeLowerCase = adquirente.nome.toLowerCase();
                           if (nomeLowerCase.includes('woovi') && nomeLowerCase.includes('gnvn')) {
