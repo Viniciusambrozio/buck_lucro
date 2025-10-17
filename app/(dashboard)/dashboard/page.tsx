@@ -2,22 +2,48 @@ import { ResumoDiario } from '@/components/dashboard/resumo-diario'
 import { FormCalculo } from '@/components/dashboard/form-calculo'
 import { HistoricoCalculos } from '@/components/dashboard/historico-calculos'
 import { ConfigHorarios } from '@/components/dashboard/config-horarios'
+import { MetricasFluxoCaixaComponent } from '@/components/dashboard/metricas-fluxo-caixa'
+import { FormSaque } from '@/components/dashboard/form-saque'
+import { GraficoLucroWrapper } from '@/components/dashboard/grafico-lucro-wrapper'
+import { HistoricoMovimentacoes } from '@/components/dashboard/historico-movimentacoes'
 import { buscarCalculosDoDia, calcularResumoDiario } from '@/app/actions/calculos'
 import { buscarHorarios } from '@/app/actions/horarios'
 import { calcularMetricasGerais } from '@/app/actions/metricas'
+import { calcularMetricasFluxoCaixa, buscarMovimentacoesDoDia } from '@/app/actions/movimentacoes'
+import { buscarContas } from '@/app/actions/contas'
+import { buscarDadosGraficoDia } from '@/app/actions/graficos'
 import { redirect } from 'next/navigation'
+import { format } from 'date-fns'
+import { Button } from '@/components/ui/button'
+import Link from 'next/link'
+import { ArrowRight } from 'lucide-react'
 
 /**
  * Página Principal do Dashboard
- * Exibe resumo, formulário de lançamento e histórico de cálculos
+ * Exibe resumo, formulário de lançamento, histórico de cálculos e fluxo de caixa
  */
 export default async function DashboardPage() {
+  const dataHoje = format(new Date(), 'yyyy-MM-dd')
+  
   // Buscar dados do servidor
-  const [calculosResult, resumoResult, horariosResult, metricasResult] = await Promise.all([
+  const [
+    calculosResult, 
+    resumoResult, 
+    horariosResult, 
+    metricasResult,
+    metricasFluxoCaixa,
+    contas,
+    movimentacoesDia,
+    dadosGrafico
+  ] = await Promise.all([
     buscarCalculosDoDia(),
     calcularResumoDiario(),
     buscarHorarios(),
     calcularMetricasGerais(),
+    calcularMetricasFluxoCaixa(),
+    buscarContas(),
+    buscarMovimentacoesDoDia(),
+    buscarDadosGraficoDia(dataHoje)
   ])
 
   // Verificar erros de autenticação
@@ -53,6 +79,18 @@ export default async function DashboardPage() {
 
   return (
     <div className="space-y-8">
+      {/* Header com ação de saque */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold">Dashboard</h1>
+          <p className="text-muted-foreground">Visão geral do sistema</p>
+        </div>
+        <FormSaque contas={contas} />
+      </div>
+
+      {/* Métricas de Fluxo de Caixa */}
+      <MetricasFluxoCaixaComponent metricas={metricasFluxoCaixa} />
+
       {/* Resumo Diário */}
       <ResumoDiario
         lucro_total={resumo.lucro_total}
@@ -64,6 +102,12 @@ export default async function DashboardPage() {
         total_faturamento={metricas.total_faturamento}
       />
 
+      {/* Gráfico de Lucro por Horário */}
+      <GraficoLucroWrapper 
+        dadosIniciais={dadosGrafico}
+        dataInicial={new Date()}
+      />
+
       {/* Configuração de Horários */}
       <ConfigHorarios horariosIniciais={horarios} />
 
@@ -72,6 +116,26 @@ export default async function DashboardPage() {
 
       {/* Histórico de Cálculos */}
       <HistoricoCalculos calculos={calculos} adquirentes={adquirentes} />
+
+      {/* Últimas Movimentações */}
+      {movimentacoesDia.length > 0 && (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-2xl font-bold">Movimentações de Hoje</h2>
+            <Link href="/saques-lucro">
+              <Button variant="outline">
+                Ver Histórico Completo
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
+          </div>
+          <HistoricoMovimentacoes 
+            movimentacoes={movimentacoesDia}
+            titulo="Últimas Movimentações"
+            descricao="Saques e transferências realizados hoje"
+          />
+        </div>
+      )}
     </div>
   )
 }

@@ -13,14 +13,44 @@ export const calculoSchema = z.object({
 })
 
 /**
+ * Função para validar e normalizar horário
+ */
+function validarHorario(horario: string): string {
+  if (!horario || typeof horario !== 'string') {
+    throw new Error('Horário inválido')
+  }
+  
+  // Se já está no formato HH:MM, validar
+  if (/^\d{2}:\d{2}$/.test(horario)) {
+    const [hora, minuto] = horario.split(':').map(Number)
+    if (hora >= 0 && hora <= 23 && minuto >= 0 && minuto <= 59) {
+      return horario
+    }
+  }
+  
+  // Se está no formato H:MM, converter para HH:MM
+  if (/^\d{1,2}:\d{2}$/.test(horario)) {
+    const [hora, minuto] = horario.split(':')
+    const horaNum = parseInt(hora)
+    const minutoNum = parseInt(minuto)
+    
+    if (horaNum >= 0 && horaNum <= 23 && minutoNum >= 0 && minutoNum <= 59) {
+      return `${hora.padStart(2, '0')}:${minuto}`
+    }
+  }
+  
+  throw new Error('Formato de horário inválido')
+}
+
+/**
  * Schema de validação para configuração de horários
- * Os horários devem estar em formato HH:MM
+ * Validação mais robusta que aceita diferentes formatos
  */
 export const horariosSchema = z.object({
-  horario_1: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, 'Formato inválido (HH:MM)'),
-  horario_2: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, 'Formato inválido (HH:MM)'),
-  horario_3: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, 'Formato inválido (HH:MM)'),
-  horario_4: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, 'Formato inválido (HH:MM)'),
+  horario_1: z.string().transform(validarHorario),
+  horario_2: z.string().transform(validarHorario),
+  horario_3: z.string().transform(validarHorario),
+  horario_4: z.string().transform(validarHorario),
 })
 
 /**
@@ -34,6 +64,7 @@ export const loginSchema = z.object({
 export type CalculoInput = z.infer<typeof calculoSchema>
 export type HorariosInput = z.infer<typeof horariosSchema>
 export type LoginInput = z.infer<typeof loginSchema>
+
 
 
 

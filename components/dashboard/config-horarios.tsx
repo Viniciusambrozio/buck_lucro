@@ -29,7 +29,18 @@ export function ConfigHorarios({ horariosIniciais }: ConfigHorariosProps) {
   const [success, setSuccess] = useState(false)
 
   const handleInputChange = (field: string, value: string) => {
-    setHorarios((prev) => ({ ...prev, [field]: value }))
+    console.log(`Campo ${field} alterado para:`, value, 'Tipo:', typeof value)
+    
+    // Garantir que o valor está no formato correto
+    let valorProcessado = value
+    if (value && value.includes(':')) {
+      const [hora, minuto] = value.split(':')
+      valorProcessado = `${hora.padStart(2, '0')}:${minuto.padStart(2, '0')}`
+    }
+    
+    console.log(`Valor processado para ${field}:`, valorProcessado)
+    
+    setHorarios((prev) => ({ ...prev, [field]: valorProcessado }))
     setSuccess(false)
     setError(null)
   }
@@ -39,7 +50,26 @@ export function ConfigHorarios({ horariosIniciais }: ConfigHorariosProps) {
     setError(null)
     setSuccess(false)
 
-    const result = await salvarHorarios(horarios)
+    // Debug: verificar formato dos horários antes de enviar
+    console.log('Horários sendo enviados:', horarios)
+    console.log('Valores individuais:', {
+      horario_1: horarios.horario_1,
+      horario_2: horarios.horario_2,
+      horario_3: horarios.horario_3,
+      horario_4: horarios.horario_4,
+    })
+
+    // Validação local antes de enviar
+    const horariosParaEnviar = {
+      horario_1: horarios.horario_1 || '09:00',
+      horario_2: horarios.horario_2 || '13:00',
+      horario_3: horarios.horario_3 || '18:00',
+      horario_4: horarios.horario_4 || '22:00',
+    }
+
+    console.log('Horários processados para envio:', horariosParaEnviar)
+
+    const result = await salvarHorarios(horariosParaEnviar)
 
     if (result.error) {
       setError(result.error)
@@ -49,7 +79,14 @@ export function ConfigHorarios({ horariosIniciais }: ConfigHorariosProps) {
 
     setSuccess(true)
     setLoading(false)
+    
+    // Forçar atualização completa da página para sincronizar horários
     router.refresh()
+    
+    // Aguardar um pouco e recarregar novamente para garantir sincronização
+    setTimeout(() => {
+      window.location.reload()
+    }, 1000)
   }
 
   return (
@@ -122,6 +159,7 @@ export function ConfigHorarios({ horariosIniciais }: ConfigHorariosProps) {
     </Card>
   )
 }
+
 
 
 

@@ -73,3 +73,4 @@ Consulte o arquivo `CONFIGURACAO_SUPABASE.md` para instruções detalhadas.
 
 
 
+

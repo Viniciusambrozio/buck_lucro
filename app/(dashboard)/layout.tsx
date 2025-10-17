@@ -28,7 +28,7 @@ export default function DashboardLayout({
               <LogoBuck width={120} height={36} className="text-foreground" />
             </Link>
           </div>
-                 <nav className="hidden md:flex items-center space-x-6 absolute left-1/2 transform -translate-x-1/2">
+                 <nav className="hidden md:flex items-center space-x-4 absolute left-1/2 transform -translate-x-1/2">
                    <ClientOnly fallback={<div className="text-sm font-medium px-4 py-2 rounded-md">Dashboard</div>}>
                      <Link
                        href="/dashboard"
@@ -53,18 +53,30 @@ export default function DashboardLayout({
                        Adquirentes
                      </Link>
                    </ClientOnly>
-                   <ClientOnly fallback={<div className="text-sm font-medium px-4 py-2 rounded-md">Histórico</div>}>
-                     <Link
-                       href="/historico"
-                       className={`text-sm font-medium px-4 py-2 rounded-md transition-all duration-300 ${
-                         pathname === "/historico"
-                           ? "bg-white shadow-sm scale-105 text-black"
-                           : "hover:bg-white hover:text-black"
-                       }`}
-                     >
-                       Histórico
-                     </Link>
-                   </ClientOnly>
+                  <ClientOnly fallback={<div className="text-sm font-medium px-4 py-2 rounded-md">Saques & Lucro</div>}>
+                    <Link
+                      href="/saques-lucro"
+                      className={`text-sm font-medium px-4 py-2 rounded-md transition-all duration-300 ${
+                        pathname === "/saques-lucro"
+                          ? "bg-white shadow-sm scale-105 text-black"
+                          : "hover:bg-white hover:text-black"
+                      }`}
+                    >
+                      Saques & Lucro
+                    </Link>
+                  </ClientOnly>
+                  <ClientOnly fallback={<div className="text-sm font-medium px-4 py-2 rounded-md">Histórico</div>}>
+                    <Link
+                      href="/historico"
+                      className={`text-sm font-medium px-4 py-2 rounded-md transition-all duration-300 ${
+                        pathname === "/historico"
+                          ? "bg-white shadow-sm scale-105 text-black"
+                          : "hover:bg-white hover:text-black"
+                      }`}
+                    >
+                      Histórico
+                    </Link>
+                  </ClientOnly>
                  </nav>
           <div className="flex items-center gap-2">
             <ThemeToggle />

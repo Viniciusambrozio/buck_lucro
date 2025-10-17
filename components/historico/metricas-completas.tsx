@@ -353,3 +353,5 @@ export function MetricasCompletas({ historico }: MetricasCompletasProps) {
     </div>
   )
 }
+
+

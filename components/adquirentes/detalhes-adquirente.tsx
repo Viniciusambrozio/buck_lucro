@@ -376,3 +376,5 @@ export function DetalhesAdquirente({ adquirente, calculos }: DetalhesAdquirenteP
     </div>
   )
 }
+
+

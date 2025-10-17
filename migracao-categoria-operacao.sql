@@ -7,3 +7,6 @@ COMMENT ON COLUMN adquirentes.categoria_operacao IS 'Categoria de operação: wh
 
 -- Atualizar adquirentes existentes para um valor padrão (opcional)
 -- UPDATE adquirentes SET categoria_operacao = 'white' WHERE categoria_operacao IS NULL;
+
+
+

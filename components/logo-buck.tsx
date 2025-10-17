@@ -36,3 +36,5 @@ export function LogoBuck({ className = '', width = 74, height = 22 }: LogoBuckPr
     </svg>
   )
 }
+
+

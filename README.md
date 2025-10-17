@@ -14,13 +14,25 @@ Lucro = (Woovi White + Woovi Pix Out + NomadFy + Pluggou) - Saldo de Sellers
 
 ## 🚀 Funcionalidades
 
+### Cálculo de Lucro
 - ✅ **Autenticação JWT** via Supabase Auth
 - ✅ **Configuração personalizada** de 4 horários diários
 - ✅ **Formulário de lançamento** com cálculo automático de lucro
 - ✅ **Resumo diário** com total, média e contagem de registros
 - ✅ **Histórico completo** dos cálculos do dia
+
+### 💰 Fluxo de Caixa (NOVO!)
+- ✅ **KPIs de Fluxo de Caixa**: Total sacado (dia/mês), saldo Pix Out, lucro disponível
+- ✅ **Gráfico de Lucro por Horário**: Visualização interativa com filtro dia/mês
+- ✅ **Registro de Saques**: 3 tipos de fluxo (Pix In→Empresa, Pix In→Pix Out, Empresa→Pix Out)
+- ✅ **Gestão de Contas**: Gerenciamento de contas Empresa, Pix In e Pix Out
+- ✅ **Histórico de Movimentações**: Visualização completa de saques e transferências
+- ✅ **Atualização Automática de Saldos**: Triggers automáticos para consistência
+
+### Interface
 - ✅ **Interface minimalista** preto e branco
 - ✅ **Responsivo** para desktop e mobile
+- ✅ **Navegação intuitiva** entre Dashboard, Fluxo de Caixa, Adquirentes e Histórico
 
 ## 🛠️ Tecnologias Utilizadas
 
@@ -70,9 +82,10 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=sua-chave-anonima-do-supabase
 ### Passo 5: Configure o banco de dados
 
 1. No painel do Supabase, vá em **SQL Editor**
-2. Abra o arquivo `database-setup.sql` do projeto
-3. Copie todo o conteúdo e cole no SQL Editor
-4. Execute o script
+2. Execute os seguintes scripts na ordem:
+   - `database-setup.sql` (Estrutura básica)
+   - `database-fluxo-caixa.sql` (Sistema de fluxo de caixa)
+   - `setup-contas-inicial.sql` (Configuração inicial - ajuste seu user_id)
 
 ### Passo 6: Crie um usuário
 
@@ -146,7 +159,7 @@ O sistema segue um design minimalista com:
 
 ## 📊 Banco de Dados
 
-### Tabelas
+### Tabelas Principais
 
 **calculos**
 - Armazena os cálculos de lucro realizados
@@ -158,8 +171,25 @@ O sistema segue um design minimalista com:
 - Valores padrão: 09:00, 13:00, 18:00, 22:00
 - Um registro por usuário
 
+### Fluxo de Caixa (NOVO)
+
+**contas**
+- Gerencia contas Empresa, Pix In e Pix Out
+- Controla saldo atual de cada conta
+- Vincula adquirentes às contas Pix In
+
+**movimentacoes**
+- Registra todos os saques e transferências
+- 3 tipos: empresa_para_pixout, pixin_para_pixout, pixin_para_empresa
+- Triggers automáticos atualizam saldos
+
+**snapshots_saldo**
+- Histórico de saldos para análise temporal
+- Permite gráficos e relatórios históricos
+
 ## 🤝 Como Usar
 
+### Cálculo de Lucro
 1. **Login**: Acesse com suas credenciais do Supabase
 2. **Configure Horários**: Defina os 4 horários que você usa para registrar (opcional)
 3. **Faça um Lançamento**:
@@ -168,6 +198,17 @@ O sistema segue um design minimalista com:
    - Clique em "Calcular Lucro"
    - Confira o resultado e clique em "Salvar"
 4. **Acompanhe**: Veja o resumo diário e o histórico completo
+
+### 💰 Fluxo de Caixa
+1. **Registre Saques**: Clique em "Registrar Saque" no dashboard
+   - Escolha o tipo: Pix In→Empresa (sacar lucro), Pix In→Pix Out (garantir saldo sellers), ou Empresa→Pix Out (cobrir saques)
+   - Selecione origem e destino
+   - Informe o valor
+2. **Visualize KPIs**: Veja total sacado, saldo Pix Out e lucro disponível
+3. **Analise Gráficos**: Use o gráfico de lucro por horário para identificar tendências
+4. **Acesse Histórico**: Navegue até "Fluxo de Caixa" para ver histórico completo
+
+📖 **Guia Completo**: Veja `GUIA_FLUXO_CAIXA.md` para instruções detalhadas
 
 ## 📝 Scripts Disponíveis
 

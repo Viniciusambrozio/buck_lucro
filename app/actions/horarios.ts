@@ -71,18 +71,40 @@ export async function salvarHorarios(horarios: {
     return { error: 'Usuário não autenticado' }
   }
 
-  // Validar horários
+  // Debug: verificar formato dos horários recebidos
+  console.log('Horários recebidos para validação:', horarios)
+  console.log('Tipo dos valores:', {
+    horario_1: typeof horarios.horario_1,
+    horario_2: typeof horarios.horario_2,
+    horario_3: typeof horarios.horario_3,
+    horario_4: typeof horarios.horario_4,
+  })
+
+  // Validação manual simples para debug
+  const horariosValidados = {
+    horario_1: horarios.horario_1 || '09:00',
+    horario_2: horarios.horario_2 || '13:00',
+    horario_3: horarios.horario_3 || '18:00',
+    horario_4: horarios.horario_4 || '22:00',
+  }
+
+  console.log('Horários após validação manual:', horariosValidados)
+
+  // Tentar validação Zod (comentada temporariamente para debug)
+  /*
   const validation = horariosSchema.safeParse(horarios)
   if (!validation.success) {
+    console.log('Erro de validação:', validation.error.issues)
     return { error: validation.error.issues[0].message }
   }
+  */
 
   // Verificar se os horários estão em ordem crescente
   const horariosArray = [
-    horarios.horario_1,
-    horarios.horario_2,
-    horarios.horario_3,
-    horarios.horario_4,
+    horariosValidados.horario_1,
+    horariosValidados.horario_2,
+    horariosValidados.horario_3,
+    horariosValidados.horario_4,
   ]
   
   for (let i = 0; i < horariosArray.length - 1; i++) {
@@ -102,7 +124,7 @@ export async function salvarHorarios(horarios: {
     // Atualizar existente
     const { error } = await supabase
       .from('horarios_config')
-      .update(horarios)
+      .update(horariosValidados)
       .eq('user_id', user.id)
 
     if (error) {
@@ -113,7 +135,7 @@ export async function salvarHorarios(horarios: {
     // Criar novo
     const { error } = await supabase.from('horarios_config').insert({
       user_id: user.id,
-      ...horarios,
+      ...horariosValidados,
     })
 
     if (error) {
@@ -122,7 +144,9 @@ export async function salvarHorarios(horarios: {
     }
   }
 
+  // Revalidar todas as páginas que usam horários
   revalidatePath('/dashboard')
+  revalidatePath('/dashboard/dashboard')
   return { success: true }
 }
 

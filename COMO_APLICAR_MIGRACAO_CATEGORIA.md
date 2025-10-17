@@ -72,3 +72,5 @@ Se encontrar problemas, verifique:
 - Os logs do Supabase para erros de banco de dados
 - Se todos os arquivos foram salvos corretamente
 
+
+

@@ -79,16 +79,21 @@ export function FormCalculo() {
         // Usar horários da API ou padrão
         const horariosConfig = (result && result.horarios) ? result.horarios : horariosDefault
         
+        console.log('Horários carregados:', horariosConfig) // Debug
+        
         setHorarios(horariosConfig)
         
         // Selecionar o horário mais próximo do atual automaticamente
-        const horaAtual = new Date().getHours() + ":" + String(new Date().getMinutes()).padStart(2, '0')
+        const agora = new Date()
+        const horaAtual = String(agora.getHours()).padStart(2, '0') + ":" + String(agora.getMinutes()).padStart(2, '0')
         const horariosArray = [
           horariosConfig.horario_1,
           horariosConfig.horario_2,
           horariosConfig.horario_3,
           horariosConfig.horario_4,
         ]
+        
+        console.log('Hora atual:', horaAtual, 'Horários disponíveis:', horariosArray) // Debug
         
         // Encontrar o horário mais próximo ao atual
         let horarioProximo = horariosArray[0]
@@ -99,6 +104,7 @@ export function FormCalculo() {
           }
         }
         
+        console.log('Horário selecionado:', horarioProximo) // Debug
         setHorarioSelecionado(horarioProximo)
       } catch (err) {
         console.error('Falha ao configurar horários:', err)
