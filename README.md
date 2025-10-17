@@ -1,6 +1,6 @@
 # 💼 BuckPay - Sistema de Cálculo de Lucro
 
-Sistema web minimalista e profissional para calcular e registrar o lucro operacional da BuckPay 4 vezes ao dia.
+Sistema web minimalista e profissional para calcular e registrar o lucro operacional da BuckPay 4 vezes ao dia. Atualizado em 2024.
 
 ## 📋 Sobre o Projeto
 
